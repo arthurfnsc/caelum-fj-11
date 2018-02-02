@@ -1,0 +1,11 @@
+apply plugin: "codenarc"
+
+codenarc {
+
+    configFile project(':').file('config/codenarc/rules.groovy')
+    ignoreFailures false
+    maxPriority1Violations 0
+    maxPriority2Violations 0
+    maxPriority3Violations 0
+    toolVersion = "1.1"
+}

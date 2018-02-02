@@ -1,0 +1,15 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = "8.7"
+}
+
+checkstyleMain {
+    doLast {
+        ant.xslt(
+                in: "$buildDir/reports/checkstyle/main.xml",
+                style:"$buildDir/resources/main/checkstyle/checkstyle.xsl",
+                out:"$buildDir/reports/checkstyle/main.html"
+        )
+    }
+}

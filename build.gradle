@@ -1,0 +1,132 @@
+buildscript {
+
+    ext {
+
+        detektVersion = '1.0.0.RC6-2'
+        kotlinVersion = '1.2.10'
+        kotlinterVersion = '1.6.0'
+        ktlintVersion = '3.0.0'
+        sonarVersion = '2.6.1'
+        springBootVersion = '1.5.9.RELEASE'
+        swaggerGeneratorVersion = '2.9.0'
+        versionsVersion = '0.17.0'
+    }
+
+    repositories {
+
+        jcenter()
+        maven {
+          url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+
+        classpath "com.github.ben-manes:gradle-versions-plugin:$versionsVersion"
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
+        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:$kotlinterVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarVersion"
+    }
+}
+
+apply from: 'plugins/java.gradle'
+
+apply from: 'plugins/checkstyle.gradle'
+apply from: 'plugins/codenarc.gradle'
+apply from: 'plugins/detekt.gradle'
+apply from: 'plugins/findbugs.gradle'
+apply from: 'plugins/gmetrics.gradle'
+apply from: 'plugins/groovy.gradle'
+apply from: 'plugins/jacoco.gradle'
+apply from: 'plugins/kotlin.gradle'
+apply from: 'plugins/kotlin-lint.gradle'
+apply from: 'plugins/pmd.gradle'
+apply from: 'plugins/sonar.gradle'
+apply from: 'plugins/versions.gradle'
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'project-report'
+
+group "br.com.arthurfnsc"
+version "1.0.0"
+
+def defaultEncoding = "UTF-8"
+
+[
+  compileGroovy,
+  compileJava,
+  compileTestGroovy,
+  compileTestJava,
+]*.options*.encoding = defaultEncoding
+
+sourceSets {
+    main {
+        groovy { srcDir 'src/main/groovy' }
+        java { srcDir 'src/main/java' }
+        kotlin { srcDir 'src/main/kotlin' }
+        resources { srcDir 'src/main/resources' }
+    }
+    test {
+        groovy { srcDir 'src/test/groovy' }
+        java { srcDir 'src/test/java' }
+        kotlin { srcDir 'src/test/kotlin' }
+        resources { srcDir 'src/test/resources' }
+    }
+}
+
+repositories {
+
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+ext {
+
+    gmetricsVersion = '0.7'
+    groovyVersion = '2.4.13'
+}
+
+dependencies {
+
+    compile "org.codehaus.groovy:groovy:$groovyVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
+
+    gmetrics "org.gmetrics:GMetrics:$gmetricsVersion"
+}
+
+task gmetrics {
+
+    doLast {
+
+        //use GMetrics ant task - http://gmetrics.sourceforge.net/gmetrics-ant-task.html
+        ant.taskdef(name: 'gmetrics', classname: 'org.gmetrics.ant.GMetricsTask', classpath: configurations.gmetrics.asPath)
+
+        //ensure reporting directory created
+        ant.mkdir(dir: "${project.reporting.baseDir.path}/gmetrics")
+
+        ant.gmetrics(metricSetFile: 'file:config/gmetrics/metrics.groovy') {
+            report(type: 'org.gmetrics.report.BasicHtmlReportWriter') {
+                option(name: 'outputFile', value: "${project.reporting.baseDir.path}/gmetrics/gmetrics.html")
+            }
+            report(type: 'org.gmetrics.report.XmlReportWriter') {
+                option(name: 'outputFile', value: "${project.reporting.baseDir.path}/gmetrics/gmetrics.xml")
+            }
+            fileset(dir: 'src') {
+                include(name: '**/*.groovy')
+                //exclusions to filter out any classes with inner classes - sonar doesn't support
+                exclude(name: '**/*Config*')
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}

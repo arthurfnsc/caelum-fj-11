@@ -1,0 +1,10 @@
+apply plugin: "io.gitlab.arturbosch.detekt"
+
+detekt {
+    profile("main") {
+        config = "$projectDir/config/detekt/config.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+        input = "$projectDir/src/main/kotlin"
+        output = "${buildDir}/reports/detekt"
+    }
+}

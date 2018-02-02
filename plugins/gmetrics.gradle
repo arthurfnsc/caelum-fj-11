@@ -1,0 +1,14 @@
+configurations { gmetrics }
+
+check {
+    doLast {
+
+        gmetrics
+
+        ant.xslt(
+                in: "$projectDir/config/gmetrics/gmetrics.xml",
+                style: "$projectDir/config/gmetrics/gmetrics.xsl",
+                out:"$buildDir/reports/gmetrics/main.html"
+        )
+    }
+}

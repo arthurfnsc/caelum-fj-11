@@ -1,0 +1,26 @@
+apply plugin: 'findbugs'
+
+findbugs {
+
+    effort = "max"
+    reportsDir = file("$buildDir/reports/findbugs")
+    sourceSets = [sourceSets.main]
+}
+
+findbugsMain {
+    reports {
+
+        html.enabled = true
+        xml.enabled = false
+    }
+}
+
+tasks.withType(FindBugs) {
+
+    exclude '**/kotlin/*'
+    exclude '**/groovy/*'
+
+    classes = classes.filter {
+        it.path.contains(new File("java/").path)
+    }
+}
