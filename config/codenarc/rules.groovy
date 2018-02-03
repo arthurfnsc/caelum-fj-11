@@ -14,15 +14,17 @@ ruleset {
     ruleset "rulesets/dry.xml"
     ruleset "rulesets/enhanced.xml"
     ruleset "rulesets/exceptions.xml"
-    ruleset("rulesets/formatting.xml") { "LineLength" length: 200 }
+    ruleset("rulesets/formatting.xml") {
+        "ClassJavadoc" enabled: false
+        "LineLength" length: 200
+    }
     ruleset "rulesets/generic.xml"
     ruleset "rulesets/grails.xml"
     ruleset "rulesets/groovyism.xml"
     ruleset "rulesets/imports.xml"
     ruleset "rulesets/junit.xml"
     ruleset("rulesets/logging.xml") {
-        'Println' priority: 1
-        'PrintStackTrace' priority: 1
+        "Println" enabled: false
     }
     ruleset "rulesets/naming.xml"
     ruleset "rulesets/security.xml"

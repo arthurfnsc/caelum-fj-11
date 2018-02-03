@@ -2,7 +2,7 @@ package br.com.groovy.arthurfnsc
 
 class MeuPrograma {
 
-    static main(args) {
-        println "Minha primeira aplicação Groovy!!"
+    static void main(String[] args) {
+        println 'Minha primeira aplicação Groovy!!'
     }
 }
