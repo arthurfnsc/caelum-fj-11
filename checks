@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+./gradlew clean checkstyleMain checkstyleTest codenarcMain codenarcTest detektCheck findbugsMain findbugsTest gmetrics ktlintCheck lintKotlin pmdMain pmdTest sonar
+

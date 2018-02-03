@@ -1,8 +1,11 @@
 package br.com.java.arthurfnsc;
 
-public class MeuPrograma {
+public final class MeuPrograma {
 
-    public static void main(String... args) {
+    private MeuPrograma() {
+    }
+
+    public static void main(final String... args) {
         System.out.println("Minha primeira aplicação Java!!");
     }
 }
