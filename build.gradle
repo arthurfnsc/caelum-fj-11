@@ -90,10 +90,12 @@ ext {
 
     gmetricsVersion = '0.7'
     groovyVersion = '2.4.13'
+    log4JVersion = '2.10.0'
 }
 
 dependencies {
 
+    compile "org.apache.logging.log4j:log4j-core:$log4JVersion"
     compile "org.codehaus.groovy:groovy:$groovyVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
